@@ -19,6 +19,7 @@ setTimeout(function() {
   let results = search[0].values;
 
   for (let value in results) {
+    console.log(value);
     document.writeln(value[0]);
   }
 }, 6000);
