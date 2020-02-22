@@ -1,2 +1,4 @@
 # hipda-simple-search
-hipda搜索
+
+[https://fqxufo.github.io/hipda-simple-search/](https://fqxufo.github.io/hipda-simple-search/)
+hipda 搜索
