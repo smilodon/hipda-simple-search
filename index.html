@@ -13,8 +13,10 @@
     <h1>TEST!</h1>
 
     <div id="app">
-      <input type="text" v-model="keyword" @keyup.enter="search" />
-      <button @click="search">搜索</button>
+      <input type="text" v-model="keyword" @keyup.enter="search('bs')" />
+
+      <button @click="search('bs')">搜索BS版</button>
+      <button @click="search('d')">搜索D版</button>
 
       <hr />
 
