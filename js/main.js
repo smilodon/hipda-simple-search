@@ -22,4 +22,4 @@ setTimeout(function() {
     console.log(value);
     document.write(`<h3>${value[0]}</h3>`);
   }
-}, 2000);
+}, 5000);
