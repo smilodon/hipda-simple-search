@@ -18,8 +18,8 @@ setTimeout(function() {
   console.log(search);
   let results = search[0].values;
 
-  for (let value in results) {
+  for (let value of results) {
     console.log(value);
-    document.writeln(value[0]);
+    document.write(`<h3>${value[0]}</h3>`);
   }
-}, 6000);
+}, 2000);
