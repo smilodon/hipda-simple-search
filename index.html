@@ -12,6 +12,23 @@
     <h1>TEST!</h1>
     <h1>TEST!</h1>
 
+    <div id="app">
+      <input type="text" v-model="keyword" @keyup.enter="search" />
+      <button @click="search">搜索</button>
+
+      <hr />
+
+      <div v-for="result in results">
+        <h3>
+          <a
+            :href="'https://www.hi-pda.com/forum//viewthread.php?tid='+result[1]"
+            >{{result[0]}}</a
+          >
+        </h3>
+      </div>
+    </div>
+
+    <script src="https://cdn.staticfile.org/vue/2.2.2/vue.js"></script>
     <script src="js/sql.js"></script>
     <script src="js/main.js"></script>
   </body>

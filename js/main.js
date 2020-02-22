@@ -13,13 +13,32 @@ xhr.onload = function(e) {
 };
 xhr.send();
 
-setTimeout(function() {
-  let search = db.exec("SELECT * FROM 'titles' where title like '%iphone%'");
-  console.log(search);
-  let results = search[0].values;
+// setTimeout(function() {
+//   let search = db.exec("SELECT * FROM 'titles' where title like '%iphone%'");
+//   console.log(search);
+//   let results = search[0].values;
 
-  for (let value of results) {
-    console.log(value);
-    document.write(`<h3>${value[0]}</h3>`);
+//   for (let value of results) {
+//     console.log(value);
+//     document.write(`
+//     <h3><a href="https://www.hi-pda.com/forum//viewthread.php?tid=${value[1]}">${value[0]}</a></h3>
+//     <hr>
+//     `);
+//   }
+// }, 5000);
+
+const app = new Vue({
+  el: "#app",
+  data: {
+    keyword: "iphone",
+    results: []
+  },
+  methods: {
+    search() {
+      console.log("ckick!");
+      this.results = db.exec(
+        `SELECT * FROM 'titles' where title like '%${this.keyword}%'`
+      )[0].values;
+    }
   }
-}, 5000);
+});
