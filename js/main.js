@@ -16,4 +16,9 @@ xhr.send();
 setTimeout(function() {
   let search = db.exec("SELECT * FROM 'titles' where title like '%iphone%'");
   console.log(search);
+  let results = search[0].values;
+
+  for (let value in results) {
+    document.writeln(value[0]);
+  }
 }, 6000);
