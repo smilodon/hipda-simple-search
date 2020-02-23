@@ -9,6 +9,7 @@ xhr_D.responseType = "arraybuffer";
 xhr_D.onload = function(e) {
   let uInt8Array = new Uint8Array(this.response);
   db_D = new SQL.Database(uInt8Array);
+  app.db_D_loaded = true;
   let contents = db_D.exec("SELECT * FROM 'titles' LIMIT 0,30");
 
   console.log(contents);
@@ -21,6 +22,7 @@ xhr_BS.responseType = "arraybuffer";
 xhr_BS.onload = function(e) {
   let uInt8Array = new Uint8Array(this.response);
   db_BS = new SQL.Database(uInt8Array);
+  app.db_BS_loaded = true;
   let contents = db_BS.exec("SELECT * FROM 'titles' LIMIT 0,30");
 
   console.log(contents);
@@ -45,7 +47,9 @@ const app = new Vue({
   el: "#app",
   data: {
     keyword: "iphone",
-    results: []
+    results: [],
+    db_D_loaded: false,
+    db_BS_loaded: false
   },
   methods: {
     search(type) {
@@ -60,6 +64,22 @@ const app = new Vue({
       this.results = db.exec(
         `SELECT * FROM 'titles' where title like '%${this.keyword}%'`
       )[0].values;
+    }
+  },
+  computed: {
+    db_D_load_status() {
+      if (this.db_D_loaded) {
+        return "D版索引已加载完成";
+      } else {
+        return "D版索引未加载,请稍后";
+      }
+    },
+    db_BS_load_status() {
+      if (this.db_BS_loaded) {
+        return "BS版索引已加载完成";
+      } else {
+        return "BS版索引未加载,请稍后";
+      }
     }
   }
 });
