@@ -62,7 +62,7 @@ const app = new Vue({
         db = db_BS;
       }
       this.results = db.exec(
-        `SELECT * FROM 'titles' where title like '%${this.keyword}%'`
+        `SELECT * FROM 'titles' where title like '%${this.keyword}%' ORDER BY tid DESC`
       )[0].values;
     }
   },
