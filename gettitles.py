@@ -5,8 +5,13 @@ import sqlite3
 import re
 import string
 
-conn = sqlite3.connect('titles.db')
-cur = conn.cursor()
+
+conn_BS = sqlite3.connect('titles_BS.db')
+conn_D = sqlite3.connect('titles_D.db')
+cur_BS = conn_BS.cursor()
+cur_D = conn_D.cursor()
+
+
 
 useragent = {
     'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_4) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.1 Safari/605.1.15'}
@@ -41,14 +46,15 @@ def login():
     data = {'loginfield': 'username', 'username': USERNAME, 'password': PWD}
 
     result = hpsession.post(loginurl, data=data)
-    # print(result.text)
+    print(result.text)
 
 
 
-def get_title(page):
+def get_title(page,cur,fid):
     # fid 2:D版, 6: BS版, 59: E版
-    baseurl = 'https://www.hi-pda.com/forum//forumdisplay.php?fid=2&orderby=dateline&page='
-    listurl = baseurl + str(page)
+    baseurl = 'https://www.hi-pda.com/forum/forumdisplay.php?orderby=dateline&fid='
+    listurl =  baseurl + str(fid) + '&page=' + str(page)
+    # print(listurl)
     listpage = hpsession.get(listurl)
     print(listpage.status_code)
     titletrs = listpage.html.find('table.datatable tbody tr')
@@ -79,12 +85,18 @@ def get_title(page):
 
 def mainwork():
     login()
-    for page in range(1,20):
-        get_title(page)
-        conn.commit()
+    for page in range(1,10):
+        get_title(page,cur_BS,6)
+        conn_BS.commit()
         time.sleep(0.5)
     
     
-    conn.close()
+    conn_BS.close()
+
+    for page in range(1,20):
+        get_title(page,cur_D,2)
+        conn_D.commit()
+        time.sleep(0.5)
+    conn_D.close()
 
 mainwork()
