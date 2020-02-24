@@ -85,7 +85,7 @@ def get_title(page,cur,fid):
 
 def mainwork():
     login()
-    for page in range(1,10):
+    for page in range(1,5):
         get_title(page,cur_BS,6)
         conn_BS.commit()
         time.sleep(0.5)
@@ -93,7 +93,7 @@ def mainwork():
     
     conn_BS.close()
 
-    for page in range(1,20):
+    for page in range(1,10):
         get_title(page,cur_D,2)
         conn_D.commit()
         time.sleep(0.5)
