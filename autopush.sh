@@ -5,4 +5,5 @@ python3 gettitles.py
 
 git add .
 git commit -m 'update db'
-git push
+git push origin
+git push gitee
