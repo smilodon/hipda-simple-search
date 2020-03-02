@@ -49,7 +49,8 @@ const app = new Vue({
     keyword: "iphone",
     results: [],
     db_D_loaded: false,
-    db_BS_loaded: false
+    db_BS_loaded: false,
+    showd:false
   },
   methods: {
     search(type) {
