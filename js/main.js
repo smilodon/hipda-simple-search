@@ -50,7 +50,8 @@ const app = new Vue({
     results: [],
     db_D_loaded: false,
     db_BS_loaded: false,
-    showd:false
+    showd: false,
+    has_result: true
   },
   methods: {
     search(type) {
@@ -62,9 +63,18 @@ const app = new Vue({
       if (type == "bs") {
         db = db_BS;
       }
-      this.results = db.exec(
+      let sqlResult = db.exec(
         `SELECT * FROM 'titles' where title like '%${this.keyword}%' ORDER BY tid DESC`
-      )[0].values;
+      );
+
+      console.log(sqlResult);
+
+      if (sqlResult.length > 0) {
+        this.has_result = true;
+        this.results = sqlResult[0].values;
+      } else {
+        this.has_result = false;
+      }
     }
   },
   computed: {
@@ -81,6 +91,12 @@ const app = new Vue({
       } else {
         return "BS版索引未加载,请稍后";
       }
+    }
+  },
+
+  watch: {
+    keyword() {
+      this.has_result = true;
     }
   }
 });
