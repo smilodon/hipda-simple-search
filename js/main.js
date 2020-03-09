@@ -100,3 +100,8 @@ const app = new Vue({
     }
   }
 });
+
+// make showd true after 1 minutes
+setTimeout(() => {
+  app.showd = true;
+}, 60000);
