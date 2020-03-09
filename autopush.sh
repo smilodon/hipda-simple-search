@@ -7,3 +7,4 @@ git add .
 git commit -m 'update db'
 git push origin
 git push gitee
+git push mirror
