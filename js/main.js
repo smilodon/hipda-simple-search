@@ -46,7 +46,8 @@ xhr_BS.send();
 const app = new Vue({
   el: "#app",
   data: {
-    keyword: "iphone",
+    keywords: "iphone",
+    keywordslist: [],
     results: [],
     db_D_loaded: false,
     db_BS_loaded: false,
@@ -54,28 +55,73 @@ const app = new Vue({
     has_result: true
   },
   methods: {
+    changeColor(resultsList, keywordslist) {
+      // for (let item of resultsList) {
+      //   let title = item[0];
+      //   for (let keyword of keywordslist) {
+      //     let replaceReg = new RegExp(this.keyword, "g");
+      //     let replaceString = `<span class="search-text">${keyword}</span>`;
+      //     title.replace(replaceReg, replaceString);
+      //     console.log(`change ${keyword}`);
+
+      //   }
+
+      // }
+      // return resultsList;
+
+      resultsList.map((item, index) => {
+        let title = item[0];
+        for (let keyword of keywordslist) {
+          let replaceReg = new RegExp(keyword, "gi");
+          let replaceString = `<span class="search-text">${keyword}</span>`;
+          // console.log(title.replace(replaceReg, replaceString));
+          title = title.replace(replaceReg, replaceString);
+          resultsList[index][0] = title;
+          // console.log(`change ${keyword}`);
+        }
+      });
+      console.log(resultsList);
+      return resultsList;
+    },
     search(type) {
+      this.results = [];
       console.log(type);
-      console.log("ckick!");
+      console.log("search click!");
 
       let db = db_D;
       console.log(db);
       if (type == "bs") {
         db = db_BS;
       }
-      let sqlResult = db.exec(
-        `SELECT * FROM 'titles' where title like '%${this.keyword}%' ORDER BY tid DESC`
-      );
+
+      let sqlstr = "";
+      if (this.keywordslist.length == 1) {
+        sqlstr = `SELECT * FROM 'titles' where title like '%${this.keywordslist[0]}%' ORDER BY tid DESC`;
+      } else if (this.keywordslist.length == 2) {
+        sqlstr = `SELECT * FROM 'titles' where title like '%${this.keywordslist[0]}%' and title like '%${this.keywordslist[1]}%' ORDER BY tid DESC`;
+      } else {
+        console.log("no result");
+        this.has_result = false;
+        return;
+      }
+      console.log(sqlstr);
+      let sqlResult = db.exec(sqlstr);
 
       console.log(sqlResult);
 
       if (sqlResult.length > 0) {
         this.has_result = true;
-        this.results = sqlResult[0].values;
+        let tempresults = sqlResult[0].values;
+        console.log(tempresults);
+        this.results = this.changeColor(tempresults, this.keywordslist);
       } else {
         this.has_result = false;
       }
     }
+  },
+  created: function() {
+    this.keywordslist =
+      this.keywords.length == 0 ? [] : this.keywords.trim().split(" ");
   },
   computed: {
     db_D_load_status() {
@@ -95,8 +141,10 @@ const app = new Vue({
   },
 
   watch: {
-    keyword() {
+    keywords() {
       this.has_result = true;
+      this.keywordslist =
+        this.keywords.length == 0 ? [] : this.keywords.trim().split(" ");
     }
   }
 });

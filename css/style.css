@@ -94,6 +94,9 @@ header h1 {
 .keyword {
   color: #9287ae;
 }
+.search-text {
+  color: #b00;
+}
 
 footer {
   padding: 20px;
