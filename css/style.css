@@ -103,6 +103,11 @@ footer {
   text-align: center;
 }
 
+/* v-cloak */
+[v-cloak] {
+  display: none;
+}
+
 /* For mobile device */
 @media (max-width: 500px) {
   .l-heading {
