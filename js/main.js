@@ -1,9 +1,7 @@
-let xhr_BS = new XMLHttpRequest();
 let xhr_D = new XMLHttpRequest();
-let db_BS;
 let db_D;
 
-xhr_D.open("GET", "titles_D.db", true);
+xhr_D.open("GET", "titles.db", true);
 xhr_D.responseType = "arraybuffer";
 
 xhr_D.onload = function(e) {
@@ -16,7 +14,7 @@ xhr_D.onload = function(e) {
 };
 xhr_D.send();
 
-xhr_BS.open("GET", "titles_BS.db", true);
+/*xhr_BS.open("GET", "titles_BS.db", true);
 xhr_BS.responseType = "arraybuffer";
 
 xhr_BS.onload = function(e) {
@@ -27,7 +25,7 @@ xhr_BS.onload = function(e) {
 
   console.log(contents);
 };
-xhr_BS.send();
+xhr_BS.send();*/
 
 // setTimeout(function() {
 //   let search = db.exec("SELECT * FROM 'titles' where title like '%iphone%'");
@@ -50,7 +48,7 @@ const app = new Vue({
     keywordslist: [],
     results: [],
     db_D_loaded: false,
-    db_BS_loaded: false,
+    // db_BS_loaded: false,
     showd: false,
     has_result: true
   },
@@ -90,15 +88,21 @@ const app = new Vue({
 
       let db = db_D;
       console.log(db);
-      if (type == "bs") {
-        db = db_BS;
-      }
 
       let sqlstr = "";
+      let sqlsubstr = "";
+
+      if (type == "d"){
+        sqlsubstr = 'boards = 2 AND';
+      }
+      if (type == "bs"){
+        sqlsubstr = 'boards = 6 AND';
+      }      
+
       if (this.keywordslist.length == 1) {
-        sqlstr = `SELECT * FROM 'titles' where title like '%${this.keywordslist[0]}%' ORDER BY tid DESC`;
+        sqlstr = `SELECT * FROM 'titles' where ${sqlsubstr} title like '%${this.keywordslist[0]}%' ORDER BY tid DESC`;
       } else if (this.keywordslist.length == 2) {
-        sqlstr = `SELECT * FROM 'titles' where title like '%${this.keywordslist[0]}%' and title like '%${this.keywordslist[1]}%' ORDER BY tid DESC`;
+        sqlstr = `SELECT * FROM 'titles' where ${sqlsubstr} title like '%${this.keywordslist[0]}%' and title like '%${this.keywordslist[1]}%' ORDER BY tid DESC`;
       } else {
         console.log("no result");
         this.has_result = false;
@@ -126,16 +130,9 @@ const app = new Vue({
   computed: {
     db_D_load_status() {
       if (this.db_D_loaded) {
-        return "D版索引已加载完成";
+        return "索引已加载完成";
       } else {
-        return "D版索引未加载,请稍后";
-      }
-    },
-    db_BS_load_status() {
-      if (this.db_BS_loaded) {
-        return "BS版索引已加载完成";
-      } else {
-        return "BS版索引未加载,请稍后";
+        return "索引未加载,请稍候";
       }
     }
   },

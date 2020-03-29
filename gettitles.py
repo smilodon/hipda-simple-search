@@ -4,21 +4,19 @@ import json
 import sqlite3
 import re
 import string
+import pdb
 
-
-conn_BS = sqlite3.connect('titles_BS.db')
-conn_D = sqlite3.connect('titles_D.db')
-cur_BS = conn_BS.cursor()
-cur_D = conn_D.cursor()
-
-
+#conn_BS = sqlite3.connect('titles_BS.db')
+#conn_D = sqlite3.connect('titles_D.db')
+#cur_BS = conn_BS.cursor()
+#cur_D = conn_D.cursor()
+conn = sqlite3.connect('titles.db')
+cur = conn.cursor()
 
 useragent = {
     'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_4) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.1 Safari/605.1.15'}
 hpsession = HTMLSession()
 hpsession.headers.update(useragent)
-
-
 
 
 class bcolors:
@@ -33,9 +31,6 @@ class bcolors:
 
 
 
-
-
-
 def login():
     with open('pwd.json','r') as f:
         data = json.load(f)
@@ -46,7 +41,7 @@ def login():
     data = {'loginfield': 'username', 'username': USERNAME, 'password': PWD}
 
     result = hpsession.post(loginurl, data=data)
-    print(result.text)
+    #print(result.text)
 
 
 
@@ -54,11 +49,10 @@ def get_title(page,cur,fid):
     # fid 2:D版, 6: BS版, 59: E版
     baseurl = 'https://www.hi-pda.com/forum/forumdisplay.php?orderby=dateline&fid='
     listurl =  baseurl + str(fid) + '&page=' + str(page)
-    # print(listurl)
+    print(listurl)
     listpage = hpsession.get(listurl)
     print(listpage.status_code)
     titletrs = listpage.html.find('table.datatable tbody tr')
-
 
 
     for titletr in titletrs:
@@ -68,17 +62,17 @@ def get_title(page,cur,fid):
             if title == None:
                 continue
             postdate = titletr.find('td em',first=True)
-
-            print(postdate.text)
-            if  not title.text.isnumeric():              
+            
+            # print(postdate.text)
+            if not title.text.isnumeric():              
                 href = title.attrs['href']
                 tid = re.findall(r'\d+',href)[0]
-                print(tid)
-                print(title.text)
+                # print(tid)
+                # print(title.text)
 
                 # 插入数据库
-                cur.execute('insert or ignore into titles(title,tid,postdate) values(?, ?,?)', (title.text, tid,postdate.text))  
-                
+                cur.execute('insert or ignore into titles(title,tid,postdate,boards) values(?, ?, ?, ?)', (title.text, tid, postdate.text, fid))  
+
         except:
             continue
 
@@ -86,17 +80,14 @@ def get_title(page,cur,fid):
 def mainwork():
     login()
     for page in range(1,5):
-        get_title(page,cur_BS,6)
-        conn_BS.commit()
+        get_title(page,cur,6)
+        conn.commit()
         time.sleep(0.5)
-    
-    
-    conn_BS.close()
 
     for page in range(1,10):
-        get_title(page,cur_D,2)
-        conn_D.commit()
+        get_title(page,cur,2)
+        conn.commit()
         time.sleep(0.5)
-    conn_D.close()
+    conn.close()
 
 mainwork()
