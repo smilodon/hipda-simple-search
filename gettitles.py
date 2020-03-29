@@ -30,7 +30,6 @@ class bcolors:
     UNDERLINE = '\033[4m'
 
 
-
 def login():
     with open('pwd.json','r') as f:
         data = json.load(f)
@@ -42,7 +41,6 @@ def login():
 
     result = hpsession.post(loginurl, data=data)
     #print(result.text)
-
 
 
 def get_title(page,cur,fid):
@@ -79,11 +77,15 @@ def get_title(page,cur,fid):
 
 def mainwork():
     login()
+    for page in range(1,2):
+        get_title(page,cur,59)
+        conn.commit()
+        time.sleep(0.5)
+    
     for page in range(1,5):
         get_title(page,cur,6)
         conn.commit()
         time.sleep(0.5)
-
     for page in range(1,10):
         get_title(page,cur,2)
         conn.commit()
